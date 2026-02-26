@@ -44,25 +44,52 @@ if [[ -f "$VERSION_FILE" ]]; then
     fi
 fi
 
-DOWNLOAD_URL=$(echo "$API" |
+APPIMAGE_URL=$(echo "$API" |
     sed -n 's/.*"browser_download_url":[[:space:]]*"\([^"]*\)".*/\1/p' |
-    grep -i 'appimage' |
+    grep -Ei 'appimage' |
     head -n1)
 
-if [[ -z "$DOWNLOAD_URL" ]]; then
-    echo "❌ Não foi possível localizar o AppImage no release $LATEST_VERSION"
-    exit 1
-fi
+INSTALLER_URL=$(echo "$API" |
+    sed -n 's/.*"browser_download_url":[[:space:]]*"\([^"]*\)".*/\1/p' |
+    grep -E '/install\.sh$' |
+    head -n1)
 
 echo "Atualizando LinuxToys → $LATEST_VERSION"
 
-if ! curl -fL "$DOWNLOAD_URL" -o "$INSTALL_DIR/linuxtoys.AppImage"; then
-    echo "❌ Falha ao baixar LinuxToys de: $DOWNLOAD_URL"
-    exit 1
+if [[ -n "$APPIMAGE_URL" ]]; then
+    if ! curl -fL "$APPIMAGE_URL" -o "$INSTALL_DIR/linuxtoys.AppImage"; then
+        echo "❌ Falha ao baixar LinuxToys de: $APPIMAGE_URL"
+        exit 1
+    fi
+
+    chmod +x "$INSTALL_DIR/linuxtoys.AppImage"
+    echo "$LATEST_VERSION" > "$VERSION_FILE"
+    echo "LinuxToys atualizado com sucesso (AppImage)."
+    exit 0
 fi
 
-chmod +x "$INSTALL_DIR/linuxtoys.AppImage"
+if [[ -n "$INSTALLER_URL" ]]; then
+    TMP_INSTALLER="$(mktemp)"
 
-echo "$LATEST_VERSION" > "$VERSION_FILE"
+    if ! curl -fL "$INSTALLER_URL" -o "$TMP_INSTALLER"; then
+        echo "❌ Falha ao baixar instalador LinuxToys de: $INSTALLER_URL"
+        rm -f "$TMP_INSTALLER"
+        exit 1
+    fi
 
-echo "LinuxToys atualizado com sucesso."
+    chmod +x "$TMP_INSTALLER"
+
+    if ! bash "$TMP_INSTALLER"; then
+        echo "❌ Falha ao executar instalador oficial do LinuxToys"
+        rm -f "$TMP_INSTALLER"
+        exit 1
+    fi
+
+    rm -f "$TMP_INSTALLER"
+    echo "$LATEST_VERSION" > "$VERSION_FILE"
+    echo "LinuxToys atualizado com sucesso (instalador oficial)."
+    exit 0
+fi
+
+echo "❌ Não foi possível localizar AppImage nem install.sh no release $LATEST_VERSION"
+exit 1
