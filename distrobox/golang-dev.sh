@@ -26,13 +26,4 @@ then
     exit 1
 fi
 
-if ! distrobox enter "${ROOT_ARGS[@]}" $NAME -- bash -c "
-apt update &&
-apt install -y golang git curl build-essential
-"
-then
-    echo "❌ Falha ao provisionar $NAME"
-    exit 1
-fi
-
-echo "Go dev pronto"
+echo "$NAME criado. Provisionamento inicial será feito no primeiro 'distrobox enter $NAME'."

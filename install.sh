@@ -18,11 +18,12 @@ run_step() {
     shift
 
     echo "== $label =="
-    if "$@"; then
+    "$@"
+    local exit_code=$?
+    if [[ $exit_code -eq 0 ]]; then
         return 0
     fi
 
-    local exit_code=$?
     echo "❌ Erro em: $label (exit $exit_code)"
     FAILED_STEPS+=("$label (exit $exit_code)")
     return 0
@@ -30,7 +31,7 @@ run_step() {
 
 run_as_target_user() {
     if [[ -n "${SUDO_USER:-}" && "$(id -u)" -eq 0 ]]; then
-        sudo -H -u "$TARGET_USER" "$@"
+        sudo -H -u "$TARGET_USER" USER="$TARGET_USER" HOME="$TARGET_HOME" "$@"
         return $?
     fi
 

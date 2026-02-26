@@ -26,15 +26,4 @@ then
     exit 1
 fi
 
-if ! distrobox enter "${ROOT_ARGS[@]}" $NAME -- bash -c "
-apt update &&
-apt install -y curl git build-essential
-
-curl https://sh.rustup.rs -sSf | sh -s -- -y
-"
-then
-    echo "❌ Falha ao provisionar $NAME"
-    exit 1
-fi
-
-echo "Rust dev pronto"
+echo "$NAME criado. Provisionamento inicial será feito no primeiro 'distrobox enter $NAME'."

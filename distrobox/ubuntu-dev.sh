@@ -26,14 +26,4 @@ then
     exit 1
 fi
 
-if ! distrobox enter "${ROOT_ARGS[@]}" $NAME -- bash -c "
-apt update &&
-apt install -y python3 python3-pip python3-venv git curl build-essential &&
-pip install --user poetry
-"
-then
-    echo "❌ Falha ao provisionar $NAME"
-    exit 1
-fi
-
-echo "$NAME pronto"
+echo "$NAME criado. Provisionamento inicial será feito no primeiro 'distrobox enter $NAME'."

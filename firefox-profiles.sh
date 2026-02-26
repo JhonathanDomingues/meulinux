@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 set -u -o pipefail
 
-TARGET_USER="${SUDO_USER:-$USER}"
+if [[ "$(id -u)" -eq 0 && -n "${SUDO_USER:-}" ]]; then
+    TARGET_USER="$SUDO_USER"
+else
+    TARGET_USER="${USER:-$(id -un)}"
+fi
+
 TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
 
 if [[ -z "$TARGET_HOME" ]]; then

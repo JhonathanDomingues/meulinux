@@ -26,18 +26,4 @@ then
     exit 1
 fi
 
-if ! distrobox enter "${ROOT_ARGS[@]}" $NAME -- bash -c "
-apt update &&
-apt install -y curl git build-essential
-
-curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
-apt install -y nodejs
-
-npm install -g pnpm yarn
-"
-then
-    echo "❌ Falha ao provisionar $NAME"
-    exit 1
-fi
-
-echo "Node dev pronto"
+echo "$NAME criado. Provisionamento inicial será feito no primeiro 'distrobox enter $NAME'."
