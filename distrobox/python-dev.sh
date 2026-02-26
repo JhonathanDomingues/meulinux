@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -u -o pipefail
 
-NAME="ubuntu-dev"
+NAME="python-dev"
 ROOT_ARGS=()
 
 if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
