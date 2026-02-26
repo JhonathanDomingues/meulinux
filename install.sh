@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -u -o pipefail
 
-echo "===== BAZZITE WORKSTATION SETUP ====="
+echo "===== JD WORKSTATION SETUP ====="
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_USER="${SUDO_USER:-$USER}"
