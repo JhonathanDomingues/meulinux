@@ -4,4 +4,4 @@ org.mozilla.firefox
 com.usebottles.bottles
 org.qbittorrent.qBittorrent
 com.jeffser.Alpaca
-
+com.github.wwmm.easyeffects
