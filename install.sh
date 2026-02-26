@@ -1,36 +1,69 @@
 #!/usr/bin/env bash
-set -e
+set -u -o pipefail
 
 echo "===== BAZZITE WORKSTATION SETUP ====="
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TARGET_USER="${SUDO_USER:-$USER}"
+TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
+
+if [[ -z "$TARGET_HOME" ]]; then
+    TARGET_HOME="$HOME"
+fi
+
+FAILED_STEPS=()
+
+run_step() {
+    local label="$1"
+    shift
+
+    echo "== $label =="
+    if "$@"; then
+        return 0
+    fi
+
+    local exit_code=$?
+    echo "❌ Erro em: $label (exit $exit_code)"
+    FAILED_STEPS+=("$label (exit $exit_code)")
+    return 0
+}
+
+run_as_target_user() {
+    if [[ -n "${SUDO_USER:-}" && "$(id -u)" -eq 0 ]]; then
+        sudo -H -u "$TARGET_USER" "$@"
+        return $?
+    fi
+
+    "$@"
+}
 
 chmod +x *.sh distrobox/*.sh
 
-echo "== Hardware check =="
-"$SCRIPT_DIR/hardware-check.sh"
+run_step "Hardware check" "$SCRIPT_DIR/hardware-check.sh"
 
-echo "== Flatpaks =="
-
-flatpak remote-add --if-not-exists flathub \
+run_step "Flatpak remote flathub" flatpak remote-add --if-not-exists flathub \
 https://flathub.org/repo/flathub.flatpakrepo
 
-xargs -a flatpaks.txt flatpak install -y flathub
+run_step "Flatpaks" xargs -a "$SCRIPT_DIR/flatpaks.txt" flatpak install -y flathub
 
-echo "== Firefox profiles =="
-"$SCRIPT_DIR/firefox-profiles.sh"
+run_step "Firefox profiles" run_as_target_user bash "$SCRIPT_DIR/firefox-profiles.sh"
 
-echo "== Ollama =="
-"$SCRIPT_DIR/install-ollama.sh"
+#desativado, utilizando o ollama que vem com o alpaca por enquanto
+#echo "== Ollama =="
+#"$SCRIPT_DIR/install-ollama.sh"
 
-echo "== Distrobox ubuntu-dev =="
-for script in distrobox/*.sh; do
-    bash "$script"
+for script in "$SCRIPT_DIR"/distrobox/*.sh; do
+    run_step "Distrobox $(basename "$script" .sh)" run_as_target_user bash "$script"
 done
 
-echo "== LinuxToys =="
-bash install-linuxtoys.sh
+run_step "LinuxToys" run_as_target_user bash "$SCRIPT_DIR/install-linuxtoys.sh"
 
 echo ""
-echo "✅ Instalação concluída"
+if [[ ${#FAILED_STEPS[@]} -eq 0 ]]; then
+    echo "✅ Instalação concluída"
+else
+    echo "⚠️ Instalação concluída com erros:"
+    printf ' - %s\n' "${FAILED_STEPS[@]}"
+fi
+
 echo "Reboot recomendado"

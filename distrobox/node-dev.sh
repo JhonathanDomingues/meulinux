@@ -1,21 +1,32 @@
 #!/usr/bin/env bash
+set -u -o pipefail
 
 NAME="node-dev"
+ROOT_ARGS=()
 
-if distrobox list | grep -q "$NAME"; then
+if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
+    ROOT_ARGS+=(--root)
+fi
+
+if distrobox list "${ROOT_ARGS[@]}" | grep -q "$NAME"; then
     echo "$NAME já existe"
     exit 0
 fi
 
 echo "Criando $NAME..."
 
-distrobox create \
+if ! distrobox create \
+    "${ROOT_ARGS[@]}" \
     --name $NAME \
     --image ubuntu:24.04 \
     --init \
     --yes
+then
+    echo "❌ Falha ao criar $NAME"
+    exit 1
+fi
 
-distrobox enter $NAME -- bash -c "
+if ! distrobox enter "${ROOT_ARGS[@]}" $NAME -- bash -c "
 apt update &&
 apt install -y curl git build-essential
 
@@ -24,5 +35,9 @@ apt install -y nodejs
 
 npm install -g pnpm yarn
 "
+then
+    echo "❌ Falha ao provisionar $NAME"
+    exit 1
+fi
 
 echo "Node dev pronto"
