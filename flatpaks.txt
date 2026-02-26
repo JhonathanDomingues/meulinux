@@ -1,0 +1,7 @@
+com.visualstudio.code
+com.obsproject.Studio
+org.mozilla.firefox
+com.usebottles.bottles
+org.qbittorrent.qBittorrent
+com.jeffser.Alpaca
+com.valvesoftware.Steam
