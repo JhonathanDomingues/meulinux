@@ -12,7 +12,7 @@ com.heroicgameslauncher.hgl
 org.jdownloader.JDownloader
 io.missioncenter.MissionCenter
 org.onlyoffice.desktopeditors
-org.postgresql.pgAdmin
+org.pgadmin.pgadmin4
 com.getpostman.Postman
 com.anydesk.Anydesk
 com.rafaelmardojai.Blanket
