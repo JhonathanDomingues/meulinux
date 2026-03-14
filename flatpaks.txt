@@ -17,3 +17,4 @@ com.getpostman.Postman
 com.anydesk.Anydesk
 com.rafaelmardojai.Blanket
 io.github.realmazharhussain.GdmSettings
+it.mijorus.gearlever
