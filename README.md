@@ -33,6 +33,18 @@ Este projeto automatiza a configuração inicial do **Bazzite**, instalando apli
 | 🍷 Bottles | Compatibilidade Windows |
 | 🦙 Alpaca | Interface para Ollama |
 | 🎮 Steam | Jogos |
+| 🌐 Google Chrome | Navegador |
+| 🎮 Heroic | Launcher para Epic/GOG |
+| 📥 JDownloader | Gerenciador de downloads |
+| 📥 qBittorrent | Cliente torrent |
+| 📁 FileZilla | Cliente FTP/SFTP |
+| 📊 Mission Center | Monitor de sistema |
+| 📄 OnlyOffice | Suíte de escritório |
+| 🗄️ pgAdmin 4 | Administração PostgreSQL |
+| 🔧 Postman | Testes de API |
+| 🎨 Easy Effects | Processamento de áudio |
+| 🖥️ AnyDesk | Acesso remoto |
+| 🤖 LM Studio | Interface local para LLMs |
 | 📦 Distrobox | Containers para desenvolvimento em Python, Go, Rust e Node |
 | 🎁 LinuxToys | Ferramentas úteis para Linux |
 </div>
@@ -48,7 +60,19 @@ Este projeto automatiza a configuração inicial do **Bazzite**, instalando apli
   - 🦀 **Rust** - Rustup, cargo
   - 🟢 **Node.js** - npm, pnpm, yarn
   - 🔵 **Go** - Compilador Go
+- ✅ LM Studio AppImage configurado para Gear Lever
 - ✅ Ferramentas LinuxToys para produtividade
+
+## 🤖 LM Studio
+
+O script baixa e configura automaticamente o **LM Studio** como AppImage no diretório `~/.local/share/applications/appimages/`. 
+
+**LM Studio** é uma interface desktop para executar modelos de linguagem (LLMs) localmente com aceleração de GPU, ideal para:
+- ✨ Testar modelos LLM offline
+- 🔒 Privacidade total (dados não saem da sua máquina)
+- ⚡ Suporte a GPU NVIDIA/AMD para inferência rápida
+
+Após a instalação, o AppImage estará disponível no **Gear Lever** para fácil gerenciamento e execução.
 
 ## 🚦 Início Rápido
 

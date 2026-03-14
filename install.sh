@@ -167,6 +167,8 @@ for script in "$SCRIPT_DIR"/distrobox/*.sh; do
     run_step_selected "Distrobox $(basename "$script" .sh)" run_as_target_user bash "$script"
 done
 
+run_step_selected "LM Studio AppImage" run_as_target_user bash "$SCRIPT_DIR/install-lmstudio.sh"
+
 run_step_selected "LinuxToys" run_as_target_user bash "$SCRIPT_DIR/install-linuxtoys.sh"
 
 echo ""
